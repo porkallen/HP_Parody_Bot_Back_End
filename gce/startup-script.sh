@@ -18,7 +18,7 @@ set -v
 
 # Talk to the metadata server to get the project id
 PROJECTID=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
-PROJECT_NAME=hpparodybot
+PROJECT_NAME="hpparodybot"
 
 # Install logging monitor. The monitor will automatically pickup logs sent to
 # syslog.

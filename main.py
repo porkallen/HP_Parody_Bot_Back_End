@@ -1,11 +1,18 @@
 import os
-import dudleybot
-import starterbot
+import threading
+
+threads = []
+bot_name = ['dudleybot','petuniabot']
+def botexec(str):
+    print('I am '+str)
+    tmpstr='/opt/app/env/bin/python /opt/app/'+str+'.py'
+    os.system(tmpstr)
+    return
 
 if __name__ == "__main__":
     os.environ.setdefault('SLACK_BOT_TOKEN_DUDLEY', 'xoxb-256688870500-YufJlAqf7bnpNDWONBCkbsxh')
     os.environ.setdefault('SLACK_BOT_TOKEN_PETUNIA', 'xoxb-256652204482-32JtdYAv5f87VTALSr3FKgBA')
-    print("Running Dudley!")
-    os.system('/opt/app/env/bin/python /opt/app/dudleybot.py')
-    print("Running Petunia!")
-    os.system('/opt/app/env/bin/python /opt/app/petuniabot.py')
+    for name in bot_name:
+        t = threading.Thread(target=botexec(name))
+        threads.append(t)
+        t.start()

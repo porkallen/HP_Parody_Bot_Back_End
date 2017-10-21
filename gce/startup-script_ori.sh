@@ -79,7 +79,3 @@ supervisorctl update
 # Application should now be running under supervisor
 # [END startup]
 echo "End Startup"
-
-echo "Start PY"
-python main.py
-echo "end script"

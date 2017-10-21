@@ -16,4 +16,5 @@
 # [START startup]
 set -v
 echo "Start up!"
-echo "`/bin/bash ./startup-script-1.sh`"
+echo $PWD
+echo "`/bin/bash $PWD/startup-script-1.sh`"

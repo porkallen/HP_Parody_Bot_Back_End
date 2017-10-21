@@ -4,7 +4,8 @@ from slackclient import SlackClient
 from utils import wit_response, wit_petunia_response
 
 # starterbot's ID as an environment variable
-BOT_ID_PETUNIA = os.environ.get("BOT_ID_PETUNIA")
+BOT_ID_PETUNIA = 'U7JK660E6'
+#BOT_ID_PETUNIA = os.environ.get("BOT_ID_PETUNIA")
 BOT_ID_DUDLEY = 'U7JL8RLEQ'
 BOT_ID = 'U7HQ4QJR2'
 

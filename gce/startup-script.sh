@@ -15,6 +15,37 @@
 
 # [START startup]
 set -v
-echo "Start up!"
-echo $PWD
-echo "`/bin/bash $PWD/startup-script-1.sh`"
+echo "====Start up!===="
+#kill -9 $(ps aux | grep -e myprocessname| awk '{ print $2 }')
+
+# Talk to the metadata server to get the project id
+PROJECTID=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
+#PROJECT_NAME="hpparodybot"
+
+# Install logging monitor. The monitor will automatically pickup logs sent to
+# syslog.
+# [START logging]
+curl -s "https://storage.googleapis.com/signals-agents/logging/google-fluentd-install.sh" | bash
+service google-fluentd restart &
+# [END logging]
+
+# Install dependencies from apt
+apt-get update
+apt-get install -yq \
+    git build-essential supervisor python python-dev python-pip libffi-dev \
+    libssl-dev
+
+# Create a pythonapp user. The application will run as this user.
+useradd -m -d /home/pythonapp pythonapp
+
+# pip from apt is out of date, so make it update itself and install virtualenv.
+pip install --upgrade pip virtualenv
+
+# Get the source code from the Google Cloud Repository
+# git requires $HOME and it's not set during the startup script.
+export HOME=/root
+git config --global credential.helper gcloud.sh
+rm -rf /opt/app/hpparodybot
+echo "New Ver $PROJECTID"
+git clone https://source.developers.google.com/p/$PROJECTID/r/hpparodybot /opt/app
+echo "`/bin/bash /opt/app/hpparodybot/gce/startup-script-1.sh`"

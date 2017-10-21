@@ -15,6 +15,8 @@
 
 # [START startup]
 set -v
+echo "Start up!"
+#kill -9 $(ps aux | grep -e myprocessname| awk '{ print $2 }')
 
 # Talk to the metadata server to get the project id
 PROJECTID=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
@@ -44,12 +46,12 @@ pip install --upgrade pip virtualenv
 export HOME=/root
 git config --global credential.helper gcloud.sh
 rm -rf /opt/app/hpparodybot
-echo "New Ver"
+echo "New Ver $PROJECTID"
 git clone https://source.developers.google.com/p/$PROJECTID/r/hpparodybot /opt/app
 
 # Install app dependencies
 virtualenv /opt/app/hpparodybot/env
-/opt/app/hpparodybot/env/bin/pip install -r /opt/app/hpparodyname/requirements.txt
+/opt/app/hpparodybot/env/bin/pip install -r /opt/app/hpparodybot/requirements.txt
 
 # Make sure the pythonapp user owns the application code
 chown -R pythonapp:pythonapp /opt/app
@@ -65,7 +67,7 @@ autorestart=true
 user=pythonapp
 # Environment variables ensure that the application runs inside of the
 # configured virtualenv.
-environment=VIRTUAL_ENV="/opt/app/env/hpparodybot",PATH="/opt/app/hpparodyname/env/bin",\
+environment=VIRTUAL_ENV="/opt/app/env/hpparodybot",PATH="/opt/app/hpparodybot/env/bin",\
     HOME="/home/pythonapp",USER="pythonapp"
 stdout_logfile=syslog
 stderr_logfile=syslog
@@ -76,3 +78,4 @@ supervisorctl update
 
 # Application should now be running under supervisor
 # [END startup]
+echo "End Startup"

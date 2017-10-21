@@ -49,8 +49,8 @@ rm -rf /opt/app/hpparodybot
 echo "New Ver $PROJECTID"
 git clone https://source.developers.google.com/p/$PROJECTID/r/hpparodybot /opt/app
 # Install app dependencies
-virtualenv /opt/app/hpparodybot/env
-/opt/app/hpparodybot/env/bin/pip install -r /opt/app/hpparodybot/requirements.txt
+virtualenv /opt/app/env
+/opt/app/env/bin/pip install -r /opt/app/requirements.txt
 
 # Make sure the pythonapp user owns the application code
 chown -R pythonapp:pythonapp /opt/app
@@ -59,14 +59,14 @@ chown -R pythonapp:pythonapp /opt/app
 # application.
 cat >/etc/supervisor/conf.d/python-app.conf << EOF
 [program:pythonapp]
-directory=/opt/app/hpparodybot
-command=/opt/app/hpparodybot/env/bin/gunicorn main:app --bind 0.0.0.0:8080
+directory=/opt/app
+command=/opt/app/env/bin/gunicorn main:app --bind 0.0.0.0:8080
 autostart=true
 autorestart=true
 user=pythonapp
 # Environment variables ensure that the application runs inside of the
 # configured virtualenv.
-environment=VIRTUAL_ENV="/opt/app/hpparodybot/env",PATH="/opt/app/hpparodybot/env/bin",\
+environment=VIRTUAL_ENV="/opt/app/env",PATH="/opt/app/env/bin",\
     HOME="/home/pythonapp",USER="pythonapp"
 stdout_logfile=syslog
 stderr_logfile=syslog
@@ -78,7 +78,4 @@ supervisorctl update
 # Application should now be running under supervisor
 # [END startup]
 echo "End Startup"
-ls -al /opt
-ls -al /opt/app
-ls -al /opt/app/hpparodybot
-/bin/bash /opt/app/hpparodybot/gce/startup-script-1.sh
+#/bin/bash /opt/app/gce/startup-script-1.sh

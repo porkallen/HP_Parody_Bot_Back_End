@@ -17,3 +17,6 @@
 set -v
 echo "Start up!"
 echo "`/bin/bash ./startup-script-1.sh`"
+echo "Start PY"
+echo $PWD
+python main.py

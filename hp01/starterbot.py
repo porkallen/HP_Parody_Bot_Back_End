@@ -6,8 +6,7 @@ from utils import wit_response
 # starterbot's ID as an environment variable
 BOT_ID_PETUNIA = 'U7JK660E6'
 BOT_ID_DUDLEY = 'U7JL8RLEQ'
-BOT_ID = 'U7HQ4QJR2'
-#BOT_ID = os.environ.get("BOT_ID")
+BOT_ID = os.environ.get("BOT_ID")
 
 # constants
 AT_BOT = "<@" + BOT_ID + ">"

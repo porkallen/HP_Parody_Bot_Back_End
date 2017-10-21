@@ -14,8 +14,9 @@
 # limitations under the License.
 
 echo "Start PY"
-# preparation: Kill zombie python
-kill -9 $(ps aux | grep -e python| awk '{ print $2 }')
+# preparation: Kill zombie python. It has to add kill conditions if adding new char
+kill -9 $(ps aux | grep -e dudleybot.py| awk '{ print $2 }')
+kill -9 $(ps aux | grep -e petuniabot.py| awk '{ print $2 }')
 # Install app dependencies
 virtualenv /opt/app/env
 /opt/app/env/bin/pip install -r /opt/app/requirements.txt

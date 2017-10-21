@@ -16,11 +16,9 @@
 # [START startup]
 set -v
 echo "Start up!"
-#kill -9 $(ps aux | grep -e myprocessname| awk '{ print $2 }')
 
 # Talk to the metadata server to get the project id
 PROJECTID=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
-#PROJECT_NAME="hpparodybot"
 
 # Install logging monitor. The monitor will automatically pickup logs sent to
 # syslog.
@@ -46,8 +44,7 @@ pip install --upgrade pip virtualenv
 export HOME=/root
 git config --global credential.helper gcloud.sh
 rm -rf /opt/app
-echo "New Ver $PROJECTID"
-git clone https://source.developers.google.com/p/$PROJECTID/r/hpparodybot /opt/app
+git clone https://source.developers.google.com/p/$PROJECTID/r/$PROJECTID /opt/app
 
 
-/bin/bash /opt/app/gce/startup-script-1.sh
+/bin/bash /opt/app/gce/bot_setup.sh

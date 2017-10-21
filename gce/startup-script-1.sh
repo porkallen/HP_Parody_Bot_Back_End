@@ -17,8 +17,7 @@ echo "Start PY"
 # Install app dependencies
 virtualenv /opt/app/env
 /opt/app/env/bin/pip install -r /opt/app/requirements.txt
-
-source /opt/app/env/activate
+source /opt/app/env/bin/activate
 pip install slackclient
 pip install wit
 python main.py

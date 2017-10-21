@@ -14,6 +14,8 @@
 # limitations under the License.
 
 echo "Start PY"
+# preparation: Kill zombie python
+kill -9 $(ps aux | grep -e python| awk '{ print $2 }')
 # Install app dependencies
 virtualenv /opt/app/env
 /opt/app/env/bin/pip install -r /opt/app/requirements.txt
@@ -21,4 +23,5 @@ source /opt/app/env/bin/activate
 pip install slackclient
 pip install wit
 /opt/app/env/bin/python /opt/app/main.py
+
 echo "end script"

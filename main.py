@@ -5,7 +5,7 @@ import threading
 threads = []
 bot_name = ['dudleybot','petuniabot']
 def botexec(str):
-    sys.stdout.write('I am '+str+ '\n')
+    sys.stdout.write('STDOUT I am '+str+ '\n')
     sys.stderr.write('I am '+str+ '\n')
     tmpstr='/opt/app/env/bin/python /opt/app/'+str+'.py'
     os.system(tmpstr)

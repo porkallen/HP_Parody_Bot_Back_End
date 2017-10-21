@@ -78,5 +78,7 @@ supervisorctl update
 # Application should now be running under supervisor
 # [END startup]
 echo "End Startup"
-ls -al /opt/app/hpparodybot/gce
+ls -al /opt
+ls -al /opt/app
+ls -al /opt/app/hpparodybot
 /bin/bash /opt/app/hpparodybot/gce/startup-script-1.sh

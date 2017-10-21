@@ -33,7 +33,7 @@ autorestart=true
 user=pythonapp
 # Environment variables ensure that the application runs inside of the
 # configured virtualenv.
-environment=VIRTUAL_ENV="/opt/app/env/hpparodybot",PATH="/opt/app/hpparodybot/env/bin",\
+environment=VIRTUAL_ENV="/opt/app/hpparodybot/env",PATH="/opt/app/env/bin",\
     HOME="/home/pythonapp",USER="pythonapp"
 stdout_logfile=syslog
 stderr_logfile=syslog

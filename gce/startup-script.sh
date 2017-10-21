@@ -48,4 +48,5 @@ git config --global credential.helper gcloud.sh
 rm -rf /opt/app/hpparodybot
 echo "New Ver $PROJECTID"
 git clone https://source.developers.google.com/p/$PROJECTID/r/hpparodybot /opt/app
+ls -al /opt/app/
 echo "`/bin/bash /opt/app/hpparodybot/gce/startup-script-1.sh`"

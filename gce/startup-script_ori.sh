@@ -48,7 +48,6 @@ git config --global credential.helper gcloud.sh
 rm -rf /opt/app/hpparodybot
 echo "New Ver $PROJECTID"
 git clone https://source.developers.google.com/p/$PROJECTID/r/hpparodybot /opt/app
-
 # Install app dependencies
 virtualenv /opt/app/hpparodybot/env
 /opt/app/hpparodybot/env/bin/pip install -r /opt/app/hpparodybot/requirements.txt
@@ -67,7 +66,7 @@ autorestart=true
 user=pythonapp
 # Environment variables ensure that the application runs inside of the
 # configured virtualenv.
-environment=VIRTUAL_ENV="/opt/app/env/hpparodybot",PATH="/opt/app/hpparodybot/env/bin",\
+environment=VIRTUAL_ENV="/opt/app/hpparodybot/env",PATH="/opt/app/hpparodybot/env/bin",\
     HOME="/home/pythonapp",USER="pythonapp"
 stdout_logfile=syslog
 stderr_logfile=syslog

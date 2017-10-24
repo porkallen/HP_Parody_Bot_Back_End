@@ -1,7 +1,7 @@
 import os
 import time
-from slackclient import SlackClient
 from utils import wit_response, wit_dudley_response
+from msgHandler import MsgHandler
 
 # starterbot's ID as an environment variable
 BOT_ID_PETUNIA = 'U7JK660E6'
@@ -134,8 +134,7 @@ def handle_command(command, channel):
         response = entity + value
         '''''
 
-    slack_client_dudley.api_call("chat.postMessage", channel=channel,
-                          text=response, as_user=True)
+    slack_client_dudley.msgSend(channel=channel,text=response,dataType=slack_client_dudley.IS_DATA)
 
 
 def parse_slack_output(slack_rtm_output):
@@ -156,14 +155,15 @@ def parse_slack_output(slack_rtm_output):
 
 
 # instantiate Slack & Twilio clients
-slack_client_dudley = SlackClient(os.environ.get('SLACK_BOT_TOKEN_DUDLEY'))
+#slack_client_dudley = SlackClient(os.environ.get('SLACK_BOT_TOKEN_DUDLEY'))
+slack_client_dudley = MsgHandler(os.environ.get('SLACK_BOT_TOKEN_DUDLEY'))
 
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1 # 1 second delay between reading from firehose
-    if slack_client_dudley.rtm_connect():
+    if slack_client_dudley.msgConnect():
         print("Dudley Bot connected and running!")
         while True:
-            command, channel = parse_slack_output(slack_client_dudley.rtm_read())
+            command, channel = parse_slack_output(slack_client_dudley.msgRecv())
             if command and channel:
                 handle_command(command, channel)
             time.sleep(READ_WEBSOCKET_DELAY)

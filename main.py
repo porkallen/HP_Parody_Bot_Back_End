@@ -13,7 +13,7 @@ def botexec(str):
     else:
         sys.stderr.write('I am '+str+ '\n')
         loc = os.path.abspath('.')
-        tmpstr=loc+'/env/bin/python '+loc+'/hp01/'+str+'.py'
+        tmpstr=loc+'env/bin/python '+loc+'hp01/'+str+'.py'
         print(tmpstr)
         os.system(tmpstr)
     return

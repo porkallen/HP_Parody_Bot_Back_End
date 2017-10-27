@@ -23,6 +23,8 @@ virtualenv /opt/app/env
 source /opt/app/env/bin/activate
 pip install slackclient
 pip install wit
+cd /opt/app
+ls -al
 /opt/app/env/bin/python /opt/app/main.py
 
 echo "end script"

@@ -13,7 +13,7 @@ from struct import *
 #s = socket.socket()         # Create a socket object
 #host = socket.gethostname() # Get local machine name
 #port = 50000                # Reserve a port for your service.
-HOST, BIND_PORT, PORT_RANGE = "localhost", 9999 , 50
+HOST, BIND_PORT, PORT_RANGE = socket.gethostbyname(socket.gethostname()), 9999 , 50
 
 class userNode:
     ip = 0
@@ -35,9 +35,9 @@ class msgHandl:
         # do your stuff with socket
         sock.settimeout(old_timeout) # Restore
         tmpBuf1 += data
-        print ('[*] Recv with IP:' + str(ip) + 'port:' + str(port)+'buf: '+tmpBuf1)
+        sys.stderr.write('[*] Recv with IP:' + str(ip) + 'port:' + str(port)+'buf: '+tmpBuf1 +'\n')
         tmpBuf2, channel = self.procMsg.procMsgEx(tmpBuf1)
-        print ('[*] Recv from process Successfully: '+tmpBuf2)
+        sys.stderr.write('[*] Recv from process Successfully: '+tmpBuf2 | '\n')
         sock.sendall(tmpBuf2)
         sock.close()
         
@@ -50,11 +50,11 @@ class msgHandl:
             msgSock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
             msgSock.bind((HOST, BIND_PORT))
             #msgSock.listen(10)
-            print "[*] Server listening on %s %d" %(HOST, BIND_PORT)
+            sys.stderr.write("[*] Server listening on %s %d \n" %(HOST, BIND_PORT))
             msgSock.listen(100)
             while 1:
                 (conn, (ip,port)) = msgSock.accept()
-                print ('[*] Connected with IP:' + str(ip) + 'port:' + str(port))
+                sys.stderr.write('[*] Connected with IP:' + str(ip) + 'port:' + str(port)+'\n')
                 t = threading.Thread(target = self.childHandler,args=(conn,ip,port))
                 self.threads.append(t)
                 t.start()

@@ -14,7 +14,7 @@ IS_SLACK= False
 #port = 50000                # Reserve a port for your service.
 #SocketServer server
 class procComm:
-    HOST = "localhost"
+    HOST = socket.gethostbyname(socket.gethostname())
     port = 0
     server = 0
     IS_DATA = 0
@@ -27,12 +27,12 @@ class procComm:
             self.server = socket.socket(socket.AF_INET,socket.SOCK_DGRAM, socket.IPPROTO_UDP)
             self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.server.bind((self.HOST,  self.port))
-            print('Msg Bind: '+str(self.port))
+            sys.stderr.write('Msg Bind: '+str(self.port)+'\n')
 
     def procMsgEx(self,data):
         for AT_BOT in BOT_MSG_HEAD:
             if data.startswith(AT_BOT):
-                print('[*] msgEx:'+str(BOT_MAP[AT_BOT][0]))
+                sys.stderr.write('[*] msgEx:'+str(BOT_MAP[AT_BOT][0]))
                 self.procMsgSend(channel = BOT_MAP[AT_BOT][0],text = data,dataType = 0)
                 ret = self.procMsgRecv()
                 return ret[0]['text'],ret[0]['channel']
@@ -52,7 +52,7 @@ class procComm:
             output_list = []
             # self.request is the UDP socket connected to the client
             data = self.server.recv(1024).strip()
-            print('Msg Recv Data on '+str(self.server.getsockname())+' data: '+data)
+            sys.stderr.write('Msg Recv Data on '+str(self.server.getsockname())+' data: '+data +'\n')
             output_list.append({'text':data,'channel':'dummy'})
             return output_list
         
@@ -61,12 +61,12 @@ class procComm:
         if(IS_SLACK == True):
             self.server.api_call("chat.postMessage", channel=channel,text=text, as_user=True)
         else:
-            print('Msg Send on '+str(self.server.getsockname())+ ' to ' + str(port))
+            sys.stderr.write('Msg Send on '+str(self.server.getsockname())+ ' to ' + str(port)+'\n')
             server_address = (self.HOST, port)
             self.server.sendto(bytes(text + '\n'),server_address)
             #print("Sent:     {}".format(data))
     
 def procMsgInit(token,port):
-    print('Msg init')
+    sys.stderr.write('Msg init\n')
     obj = procComm(token,port)
     return obj

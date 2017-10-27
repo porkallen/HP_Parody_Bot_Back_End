@@ -1,7 +1,8 @@
 import os
 import time
 from utils import wit_response, wit_dudley_response
-from msgHandler import MsgHandler
+from procComm import *
+from botMap import *
 
 # starterbot's ID as an environment variable
 BOT_ID_PETUNIA = 'U7JK660E6'
@@ -18,6 +19,12 @@ EXAMPLE_COMMAND = "do"
 QUESTION_1 = "dudders when was the last time you received a hair cut?"
 QUESTION_2 = "oh sweetums, i know you don't want to go, but we'll get harry to " \
              "schedule it."
+
+QUESTION_3 = "what? how dare you?! who told you -- dudders close your ears! i don't want you to hear anything about " \
+               "this science nonsense. just go back to watching the tele... wait just one moment... sweetums... what" \
+               "are you watching on the tele?"
+
+STATEMENT_3 = "Mom stop talking I'm watching the Tele, Trump is on! He is firing people on The Apprentice!"
 
 #random
 READ_DELAY = 2
@@ -45,6 +52,12 @@ def handle_command(command, channel):
             time.sleep(READ_DELAY)
             check = True
 
+        print(general_text)
+        if general_text == QUESTION_3:
+            response = AT_PETUNIA + STATEMENT_3
+            time.sleep(READ_DELAY)
+            check = True
+
         ##########
         # WIT.AI #
         ##########
@@ -69,6 +82,8 @@ def handle_command(command, channel):
                         if how_many_insults >= 3:
                             response = "Shut Up {}, you are a {}!".format(
                                 str(response_wit_parsed['object_of_insult'][0]), str(response_wit_parsed['object_of_insult'][2]))
+                    else:
+                        response = "Shut Up POTTER, you don't even know how to make a good insult!"
 
                 #Second, the other option for intent
                 elif response_wit_parsed['intent'] == ['threaten_with_magic']:
@@ -134,7 +149,7 @@ def handle_command(command, channel):
         response = entity + value
         '''''
 
-    slack_client_dudley.msgSend(channel=channel,text=response,dataType=slack_client_dudley.IS_DATA)
+    slack_client_dudley.procMsgSend(channel=IS_MSG_HANDLER_PORT,text=response,dataType=slack_client_dudley.IS_DATA)
 
 
 def parse_slack_output(slack_rtm_output):
@@ -149,6 +164,7 @@ def parse_slack_output(slack_rtm_output):
             if output and 'text' in output and AT_BOT in output['text']:
                 # return text after the @ mention, whitespace removed
                 # return output['text'].split(AT_BOT)[1].strip().lower(),
+                print ('Dudley said'+output['text']+'...'+output['channel'])
                 return output['text'], \
                        output['channel']
     return None, None
@@ -156,14 +172,14 @@ def parse_slack_output(slack_rtm_output):
 
 # instantiate Slack & Twilio clients
 #slack_client_dudley = SlackClient(os.environ.get('SLACK_BOT_TOKEN_DUDLEY'))
-slack_client_dudley = MsgHandler(os.environ.get('SLACK_BOT_TOKEN_DUDLEY'))
+slack_client_dudley = procMsgInit(os.environ.get('SLACK_BOT_TOKEN_DUDLEY'),IS_DUDLEY_PORT)
 
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1 # 1 second delay between reading from firehose
-    if slack_client_dudley.msgConnect():
+    if slack_client_dudley.procMsgConn():
         print("Dudley Bot connected and running!")
         while True:
-            command, channel = parse_slack_output(slack_client_dudley.msgRecv())
+            command, channel = parse_slack_output(slack_client_dudley.procMsgRecv())
             if command and channel:
                 handle_command(command, channel)
             time.sleep(READ_WEBSOCKET_DELAY)

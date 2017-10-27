@@ -1,7 +1,8 @@
 import os
 import time
-from slackclient import SlackClient
 from utils import wit_response, wit_petunia_response
+from procComm import *
+from botMap import *
 
 # starterbot's ID as an environment variable
 BOT_ID_PETUNIA = os.environ.get("BOT_ID_PETUNIA")
@@ -76,8 +77,7 @@ def handle_command(command, channel):
                 response = "Harry go to CUPBOARD UNDER THE STAIRS NOW!!!"
                 time.sleep(READ_DELAY)
 
-    slack_client_petunia.api_call("chat.postMessage", channel=channel,
-                          text=response, as_user=True)
+    slack_client_petunia.procMsgSend(channel=IS_MSG_HANDLER_PORT,text=response,dataType=slack_client_petunia.IS_DATA)
 
 
 def parse_slack_output(slack_rtm_output):
@@ -98,14 +98,14 @@ def parse_slack_output(slack_rtm_output):
 
 
 # instantiate Slack & Twilio clients
-slack_client_petunia = SlackClient(os.environ.get('SLACK_BOT_TOKEN_PETUNIA'))
+slack_client_petunia = procMsgInit(os.environ.get('SLACK_BOT_TOKEN_PETUNIA'),IS_PETUNIA_PORT)
 
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1 # 1 second delay between reading from firehose
-    if slack_client_petunia.rtm_connect():
+    if slack_client_petunia.procMsgConn():
         print("Aunt Petunia Bot connected and running!")
         while True:
-            command, channel = parse_slack_output(slack_client_petunia.rtm_read())
+            command, channel = parse_slack_output(slack_client_petunia.procMsgRecv())
             if command and channel:
                 handle_command(command, channel)
             time.sleep(READ_WEBSOCKET_DELAY)

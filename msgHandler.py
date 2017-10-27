@@ -37,7 +37,7 @@ class msgHandl:
         tmpBuf1 += data
         sys.stderr.write('[*] Recv with IP:' + str(ip) + 'port:' + str(port)+'buf: '+tmpBuf1 +'\n')
         tmpBuf2, channel = self.procMsg.procMsgEx(tmpBuf1)
-        sys.stderr.write('[*] Recv from process Successfully: '+tmpBuf2 | '\n')
+        sys.stderr.write('[*] Recv from process Successfully: '+ tmpBuf2 + '\n')
         sock.sendall(tmpBuf2)
         sock.close()
         

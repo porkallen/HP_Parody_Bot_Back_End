@@ -31,15 +31,22 @@ class msgHandl:
         tmpBuf2 = ''
         old_timeout = sock.gettimeout() # Save
         sock.settimeout(20) # Set time out
-        data = sock.recv(1024)
-        # do your stuff with socket
-        sock.settimeout(old_timeout) # Restore
-        tmpBuf1 += data
-        sys.stderr.write('[*] Recv with IP:' + str(ip) + 'port:' + str(port)+'buf: '+tmpBuf1 +'\n')
-        tmpBuf2, channel = self.procMsg.procMsgEx(tmpBuf1)
-        sys.stderr.write('[*] Recv from process Successfully: '+ tmpBuf2 + '\n')
-        sock.sendall(tmpBuf2)
-        sock.close()
+        try:
+            data = sock.recv(1024)
+            # do your stuff with socket
+            sock.settimeout(old_timeout) # Restore
+            tmpBuf1 += data
+            sys.stderr.write('[*] Recv with IP:' + str(ip) + 'port:' + str(port)+'buf: '+tmpBuf1 +'\n')
+            tmpBuf2, channel = self.procMsg.procMsgEx(tmpBuf1)
+            sys.stderr.write('[*] Recv from process Successfully: '+ tmpBuf2 + '\n')    
+            sock.sendall(tmpBuf2)
+            sock.close()
+        except (socket.timeout, socket.gaierror) as error:
+            sys.stderr.write('[*] Sock Recv Timeout')
+        finally:
+            sock.close()
+        
+
         
     def MsgHandler(self):
         try:

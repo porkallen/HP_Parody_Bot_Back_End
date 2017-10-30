@@ -37,11 +37,11 @@ def handle_command(command, channel):
     """
     response = "I am a Hogwarts text messaging service. I have very limited functionality because the muggle who developed" \
                " my programming is very, very lazy."
-
+    print("Bob Hair Cut Bot connected and running!")
     ##### NEEED TO FIX THE TRUE FALSE TAGS BAD STRUCTURE###
-    if command.startswith(AT_HOGFORD):
+    if command.startswith(AT_BOB_HAIR_CUT):
         check = False
-        general_text = command.split(AT_HOGFORD)[1].strip().lower()
+        general_text = command.split(AT_BOB_HAIR_CUT)[1].strip().lower()
 
         if general_text == START_COMMAND:
             # @DOBY This response should execute once Aunt Petunia finished scolding Harry
@@ -70,7 +70,7 @@ def parse_slack_output(slack_rtm_output):
     output_list = slack_rtm_output
     if output_list and len(output_list) > 0:
         for output in output_list:
-            if output and 'text' in output and AT_HOGFORD in output['text']:
+            if output and 'text' in output and AT_BOB_HAIR_CUT in output['text']:
                 # return text after the @ mention, whitespace removed
                 # return output['text'].split(AT_BOT)[1].strip().lower(),
                 return output['text'], \

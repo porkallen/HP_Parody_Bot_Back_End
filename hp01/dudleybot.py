@@ -164,7 +164,6 @@ def parse_slack_output(slack_rtm_output):
             if output and 'text' in output and AT_BOT in output['text']:
                 # return text after the @ mention, whitespace removed
                 # return output['text'].split(AT_BOT)[1].strip().lower(),
-                print ('Dudley said'+output['text']+'...'+output['channel'])
                 return output['text'], \
                        output['channel']
     return None, None

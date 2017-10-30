@@ -39,7 +39,7 @@ class msgHandl:
             sys.stderr.write('[*] Recv with IP:' + str(ip) + 'port:' + str(port)+'buf: '+tmpBuf1 +'\n')
             tmpBuf2, channel = self.procMsg.procMsgEx(tmpBuf1)
             sys.stderr.write('[*] Recv from process Successfully: '+ tmpBuf2 + '\n')
-            tmpBuf2 += '[channel='+str(channel)+']'    
+            tmpBuf2 += '!@#'+str(channel)    
             sock.sendall(tmpBuf2)
             sock.close()
         except (socket.timeout, socket.gaierror) as error:

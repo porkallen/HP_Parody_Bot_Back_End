@@ -64,6 +64,7 @@ def handle_command(command, channel, milestone_marker):
             response = AT_DUDLEY + "Dudders when was the last time you received a hair cut?"
             time.sleep(READ_DELAY)
             check = True
+            milestone_marker = 0
 
         if general_text == RESPONSE_1:
             response = AT_DUDLEY + "Oh sweetums, I know you don't want to go, but we'll get Harry to " \

@@ -35,6 +35,7 @@ class procComm:
                 sys.stderr.write('[*] msgEx:'+str(BOT_MAP[AT_BOT][0]))
                 self.procMsgSend(channel = BOT_MAP[AT_BOT][0],text = data,dataType = 0)
                 ret = self.procMsgRecv()
+                ret[0]['channel'] = BOT_MAP[AT_BOT][0]
                 return ret[0]['text'],ret[0]['channel']
         return '',0
         

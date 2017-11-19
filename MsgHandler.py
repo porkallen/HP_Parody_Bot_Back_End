@@ -22,7 +22,7 @@ class UserNode:
     quiz = 0
 
 #SocketServer server
-class MsgHandl:
+class MsgHandler:
     threads = []
     procMsg = 0
 

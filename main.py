@@ -4,7 +4,7 @@ import threading
 import multiprocessing
 from MsgHandler import *
 
-bot_name = ['MsgHandler','dudleybot','petuniabot','bob_hair_cut','hogford']
+bot_name = ['MsgHandler', 'dudleybot', 'petuniabot', 'bob_hair_cut', 'hogford']
 #bot_name = ['msgHandler','dudleybot']
 
 def botexec(str):
@@ -19,7 +19,7 @@ def botexec(str):
     return
 
 if __name__ == "__main__":
-    msgServ = MsgHandl();
+    msgServ = MsgHandler();
     jobs = []
     loc = os.path.abspath('.')
     os.environ.setdefault('SLACK_BOT_TOKEN_DUDLEY', 'xoxb-256688870500-YufJlAqf7bnpNDWONBCkbsxh')

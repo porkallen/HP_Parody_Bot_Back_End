@@ -2,16 +2,16 @@ import os
 import sys
 import threading
 import multiprocessing
-from msgHandler import msgHandl
+from MsgHandler import *
 
-bot_name = ['msgHandler','dudleybot','petuniabot','bob_hair_cut','hogford']
+bot_name = ['MsgHandler','dudleybot','petuniabot','bob_hair_cut','hogford']
 #bot_name = ['msgHandler','dudleybot']
 
 def botexec(str):
-    if(str == 'msgHandler'):
-        msgServ.MsgHandler()
+    sys.stderr.write('I am '+str+ '\n')
+    if(str == bot_name[0]):
+        msgServ.msgHandler()
     else:
-        sys.stderr.write('I am '+str+ '\n')
         loc = os.path.abspath('.')
         tmpstr=loc+'/env/bin/python '+loc+'/hp01/'+str+'.py'
         print(tmpstr)
@@ -19,7 +19,7 @@ def botexec(str):
     return
 
 if __name__ == "__main__":
-    msgServ = msgHandl();
+    msgServ = MsgHandl();
     jobs = []
     loc = os.path.abspath('.')
     os.environ.setdefault('SLACK_BOT_TOKEN_DUDLEY', 'xoxb-256688870500-YufJlAqf7bnpNDWONBCkbsxh')

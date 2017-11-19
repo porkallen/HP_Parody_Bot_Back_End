@@ -15,14 +15,14 @@ from struct import *
 #port = 50000                # Reserve a port for your service.
 HOST, BIND_PORT, PORT_RANGE = socket.gethostbyname(socket.gethostname()), 9999 , 50
 
-class userNode:
+class UserNode:
     ip = 0
     port = 0
     chapter = 0
     quiz = 0
 
 #SocketServer server
-class msgHandl:
+class MsgHandl:
     threads = []
     procMsg = 0
 
@@ -39,7 +39,7 @@ class msgHandl:
             sys.stderr.write('[*] Recv with IP:' + str(ip) + 'port:' + str(port)+'buf: '+tmpBuf1 +'\n')
             tmpBuf2, channel = self.procMsg.procMsgEx(tmpBuf1)
             sys.stderr.write('[*] Recv from process Successfully: '+ tmpBuf2 + '\n')
-            tmpBuf2 += '!@#'+str(channel)    
+            tmpBuf2 += '!@#'+str(channel)
             sock.sendall(tmpBuf2)
             sock.close()
         except (socket.timeout, socket.gaierror) as error:
@@ -49,7 +49,7 @@ class msgHandl:
         
 
         
-    def MsgHandler(self):
+    def msgHandler(self):
         try:
             #IPC communication
             self.procMsg = procComm(0,IS_MSG_HANDLER_PORT) 

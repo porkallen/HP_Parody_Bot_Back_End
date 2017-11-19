@@ -35,7 +35,22 @@ STATEMENT_06 = "Oh thank goodness! Dudders you are so brilliant, you know you ar
 
 #random
 READ_DELAY = 2
+##### Progression tracking #############
+milestone_marker = 0
+########################################
 
+def send_hint():
+    #
+    # Message to @GP:
+    # The strcuture of hint dictionary is 
+    # key: milestone, value: 3 hints
+    # Each time users request hint, it will send back the hint to current milestone. 
+    #
+    hint_set = {
+        0:['You jump, I jump. Remember?','Wait to Die,Wait to Live','Make Each day Count'],
+        1:['May the force be with you','Help me, Obi-Wan Kenobi. You are my only hope','I find your lack of faith disturbing.']
+    }
+    return hint_set[milestone_marker]
 
 def handle_command(command, channel, milestone_marker):
     """
@@ -169,15 +184,12 @@ slack_client_petunia = procMsgInit(os.environ.get('SLACK_BOT_TOKEN_PETUNIA'),IS_
 
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1 # 1 second delay between reading from firehose
-    ##### Progression tracking #############
-    milestone_marker = 0
-    ########################################
     if slack_client_petunia.procMsgConn():
         print("Aunt Petunia Bot connected and running!")
         while True:
             command, channel = parse_slack_output(slack_client_petunia.procMsgRecv())
             if command and channel:
-                milestone_marker = handle_command(command, channel, milestone_marker)
+                handle_command(command, channel)
             time.sleep(READ_WEBSOCKET_DELAY)
     else:
         print("Connection failed. Invalid Slack token or bot ID?")

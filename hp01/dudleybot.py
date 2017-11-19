@@ -148,15 +148,14 @@ def handle_command(command, channel):
 
         response = entity + value
         '''''
-
-    slack_client_dudley.procMsgSend(
-        channel = IS_MSG_HANDLER_PORT,
-        text = response,
-        chapter = 0,
-        milestone = 0,
-        dataType=slack_client_dudley.IS_DATA,
+        slack_client_dudley.procMsgSend(
+            channel = IS_MSG_HANDLER_PORT,
+            text = response,
+            chapter = 0,
+            milestone = 0,
+            dataType=slack_client_dudley.IS_DATA,
         
-    )
+        )
 
 
 def parse_slack_output(slack_rtm_output):

@@ -46,13 +46,14 @@ def send_hint():
     # key: milestone, value: 3 hints
     # Each time users request hint, it will send back the hint to current milestone. 
     #
+    global milestone_marker
     hint_set = {
         0:['You jump, I jump. Remember?','Wait to Die,Wait to Live','Make Each day Count'],
         1:['May the force be with you','Help me, Obi-Wan Kenobi. You are my only hope','I find your lack of faith disturbing.']
     }
     return hint_set[milestone_marker]
 
-def handle_command(command, channel, milestone_marker):
+def handle_command(command, channel):
     """
         Receives commands directed at the bot and determines if they
         are valid commands. If so, then acts on the commands. If not,
@@ -61,6 +62,8 @@ def handle_command(command, channel, milestone_marker):
     response = "EXECUSE ME!! You UNGRATEFUL little BRAT! Use proper English " \
                "when talking to me!"
 
+    global milestone_marker
+    print('MS: ' + str(milestone_marker))
     if command.startswith(AT_BOT):
 
         check = False
@@ -76,6 +79,7 @@ def handle_command(command, channel, milestone_marker):
         # This is what the bot intialize says        #
         ##############################################
         if general_text == START_COMMAND:
+            print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
             response = AT_DUDLEY + "Dudders when was the last time you received a hair cut?"
             time.sleep(READ_DELAY)
             check = True
@@ -158,6 +162,7 @@ def handle_command(command, channel, milestone_marker):
                 response = "Harry go to CUPBOARD UNDER THE STAIRS NOW!!!"
                 time.sleep(READ_DELAY)
         
+        print("P's milestone:"+str(milestone_marker))
         slack_client_petunia.procMsgSend(
             channel = IS_MSG_HANDLER_PORT,
             text = response,
@@ -194,7 +199,7 @@ if __name__ == "__main__":
         while True:
             command, channel = parse_slack_output(slack_client_petunia.procMsgRecv())
             if command and channel:
-                handle_command(command, channel,milestone_marker)
+                handle_command(command, channel)
             time.sleep(READ_WEBSOCKET_DELAY)
     else:
         print("Connection failed. Invalid Slack token or bot ID?")

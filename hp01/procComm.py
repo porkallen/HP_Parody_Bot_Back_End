@@ -12,11 +12,12 @@ IS_SLACK= False
 
  #
  #   Data Format:
- # 0: <Msg Type>
- # 1: <Port>
- #   2: <Chapter>
- #   3: <MileStone>
- # 4: <Text MSg>
+ # 0: <Text MSg>
+ # 1: <Msg Type>
+ # 2: <Port>
+ # 3: <Chapter>
+ # 4: <MileStone>
+ # 
 
 class BotMsgNode:
     msgType = 0
@@ -25,7 +26,7 @@ class BotMsgNode:
     milestone = 0
     msg = ''
     BOT_MSG_TYPE_TXT = 0
-    BOT_MSG_TYPE_HINT = 1  
+    BOT_MSG_TYPE_HINT = 1
     BOT_MSG_IDX_MSG = 0
     BOT_MSG_IDX_MSG_TYPE = 1
     BOT_MSG_IDX_MSGTO = 2
@@ -38,7 +39,7 @@ class BotMsgNode:
         for i in range(len(strPool) - 1):
             retStr += strPool[i]+self.SPLIT_CHAR
         retStr += strPool[len(strPool)-1]
-        print("format: "+retStr);
+        sys.stderr.write("[*] Format Msg: " + retStr)
         return retStr
 
     def parseBotMsg(self,msg):
@@ -65,7 +66,7 @@ class procComm:
             self.server = socket.socket(socket.AF_INET,socket.SOCK_DGRAM, socket.IPPROTO_UDP)
             self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.server.bind((self.HOST,  self.port))
-            sys.stderr.write('Msg Bind: '+str(self.port)+'\n')
+            sys.stderr.write('[*]Msg Bind: ' + str(self.port) + '\n')
 
     def procMsgEx(self,data):
         botmsg = BotMsgNode();
@@ -121,7 +122,8 @@ class procComm:
                 self.server.api_call("chat.postMessage", channel=channel,text=text, as_user=True)
         else:
             msgTx = botmsg.formatBotMsg(text,dataType,channel,chapter,milestone)
-            sys.stderr.write('[*]procMsgSend '+str(self.server.getsockname())+ ' to ' + str(port)+'\n')
+            sys.stderr.write('[*]procMsgSend ' + str(self.server.getsockname()
+                                                     ) + ' to ' + str(port) + ' msg:' + msgTx + '\n')
             server_address = (self.HOST, port)
             self.server.sendto(bytes(msgTx + '\n'),server_address)
             #print("Sent:     {}".format(data))

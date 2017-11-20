@@ -10,7 +10,8 @@ from chapter_02_script import *
 #random
 READ_DELAY = 2
 
-def send_hint():
+
+def send_hint(milestone_marker):
     #
     # Message to @GP:
     # The strcuture of hint dictionary is
@@ -164,15 +165,25 @@ def parse_slack_output(slack_rtm_output):
         this parsing function returns None unless a message is
         directed at the Bot, based on its ID.
     """
+    ret1 = None
+    ret2 = None
+    ret3 = None
+    msgFrom = None
     output_list = slack_rtm_output
     if output_list and len(output_list) > 0:
         for output in output_list:
             if output and 'text' in output and AT_HAGRID in output['text']:
                 # return text after the @ mention, whitespace removed
                 # return output['text'].split(AT_BOT)[1].strip().lower(),
-                return output['text'], \
-                       output['channel']
-    return None, None
+                ret1 = output['text']
+                ret2 = output['channel']
+            if output and 'msgFrom' in output and output['msgFrom']:
+                msgFrom = output['msgFrom']
+            if output and 'MS' in output and output['MS']:
+                ret3 = output['MS']
+    if int(msgFrom) != IS_MSG_HANDLER_PORT:
+        ret3 = None
+    return ret1,ret2,ret3
 
 
 # instantiate Slack & Twilio clients
@@ -182,11 +193,16 @@ if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1 # 1 second delay between reading from firehose
     ##### Progression tracking #############
     milestone_marker = 0
+    tmp_marker = None
     ########################################
     if slack_client_hagrid.procMsgConn():
         print("Hagrid Bot connected and running!")
         while True:
-            command, channel = parse_slack_output(slack_client_hagrid.procMsgRecv())
+            
+            command, channel, tmp_marker = parse_slack_output(
+                slack_client_hagrid.procMsgRecv())
+            if tmp_marker:
+                milestone_marker = int(tmp_marker)
             if command and channel:
                 milestone_marker = handle_command(command, channel, milestone_marker)
             time.sleep(READ_WEBSOCKET_DELAY)

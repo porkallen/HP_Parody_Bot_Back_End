@@ -61,9 +61,8 @@ def handle_command(command, channel):
     """
     response = "EXECUSE ME!! You UNGRATEFUL little BRAT! Use proper English " \
                "when talking to me!"
-
     global milestone_marker
-    print('MS: ' + str(milestone_marker))
+    
     if command.startswith(AT_BOT):
 
         check = False
@@ -79,7 +78,6 @@ def handle_command(command, channel):
         # This is what the bot intialize says        #
         ##############################################
         if general_text == START_COMMAND:
-            print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
             response = AT_DUDLEY + "Dudders when was the last time you received a hair cut?"
             time.sleep(READ_DELAY)
             check = True
@@ -162,7 +160,6 @@ def handle_command(command, channel):
                 response = "Harry go to CUPBOARD UNDER THE STAIRS NOW!!!"
                 time.sleep(READ_DELAY)
         
-        print("P's milestone:"+str(milestone_marker))
         slack_client_petunia.procMsgSend(
             channel = IS_MSG_HANDLER_PORT,
             text = response,

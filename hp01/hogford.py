@@ -58,8 +58,13 @@ def handle_command(command, channel):
             time.sleep(READ_DELAY)
             check = True
 
-        slack_client.procMsgSend(channel=IS_MSG_HANDLER_PORT,text=response,dataType=slack_client.IS_DATA)
-
+        slack_client.procMsgSend(
+            channel = IS_MSG_HANDLER_PORT,
+            text = response,
+            chapter = 0,
+            milestone = 0,
+            dataType=slack_client.IS_DATA
+        )
 
 
 def parse_slack_output(slack_rtm_output):

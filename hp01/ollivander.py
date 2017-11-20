@@ -10,6 +10,20 @@ from chapter_02_script import *
 #random
 READ_DELAY = 2
 
+def send_hint():
+    #
+    # Message to @GP:
+    # The strcuture of hint dictionary is
+    # key: milestone, value: 3 hints
+    # Each time users request hint, it will send back the hint to current milestone.
+    #
+    hint_set = {
+        0:['Type: "Spin Wand" (no quotes). you will need to use the hints for this section'],
+        1:['Type: "Twirl Wand"'],
+        2:['Type: "Wave Wand"'],
+    }
+    return hint_set[milestone_marker]
+
 
 def handle_command(command, channel, milestone_marker):
     """
@@ -34,17 +48,18 @@ def handle_command(command, channel, milestone_marker):
         #                  BLOCK 3                   #
         # This is what the bot intialize says        #
         ##############################################
-        if general_text == "p3":
+        if general_text == "wave wand":
             response = CH02_ollivander_REPLY_03
             time.sleep(READ_DELAY)
             check = True
+            #HAGRID IS TRIGGERED HERE
             milestone_marker = 3
 
         ##############################################
         #                  BLOCK 2                   #
         # This is what the bot intialize says        #
         ##############################################
-        if general_text == "p2":
+        if general_text == "twirl wand":
             response = CH02_ollivander_REPLY_02
             time.sleep(READ_DELAY)
             check = True
@@ -54,7 +69,7 @@ def handle_command(command, channel, milestone_marker):
         #                  BLOCK 1                   #
         # First spell attempted                      #
         ##############################################
-        if general_text == "p1":
+        if general_text == "spin wand":
             response = CH02_ollivander_REPLY_01
             time.sleep(READ_DELAY)
             check = True
@@ -168,7 +183,14 @@ def handle_command(command, channel, milestone_marker):
             '''
 
 
-    slack_client_ollivander.procMsgSend(channel=channel, text=response, dataType=slack_client_ollivander.IS_DATA)
+    slack_client_ollivander.procMsgSend(
+        channel=IS_MSG_HANDLER_PORT,
+        text=response,
+        chapter=1,
+        milestone=milestone_marker,
+        dataType=slack_client_ollivander.IS_DATA,
+        msgFrom=IS_OLLIVANDER_PORT
+    )
     return milestone_marker
 
 

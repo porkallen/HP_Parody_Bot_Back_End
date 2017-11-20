@@ -58,7 +58,7 @@ CH02_hagrid_REPLY_03_Positive = "O' good to hear! Well I just got to Gringots Ve
 #QUESTION about Prof Woz
 
 #question about Woz
-CH02_hagrid_REPLY_03_Woz = "Blimmey Potter, I forgot you know nothing about Hogfor' well Professor Marc " \
+CH02_hagrid_REPLY_03_Woz = "Blimmey Potter, I forgot you know nothing about Hogfor' well Professor Mark " \
                                 "Wozniak is the greates' engineer of them all! If I didn' know no better I woulda " \
                                 "said he was er Wizard! Oh just finished up at Gringots, time to stop by Ollivander's" \
                                 " fer yer W.A.N.D... actually let me just send him an text, he can probably just send " \

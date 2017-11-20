@@ -35,25 +35,28 @@ STATEMENT_06 = "Oh thank goodness! Dudders you are so brilliant, you know you ar
 
 #random
 READ_DELAY = 2
-##### Progression tracking #############
-milestone_marker = 0
-########################################
 
-def send_hint():
+
+def send_hint(milestone_marker):
     #
     # Message to @GP:
     # The strcuture of hint dictionary is 
     # key: milestone, value: 3 hints
     # Each time users request hint, it will send back the hint to current milestone. 
     #
-    global milestone_marker
     hint_set = {
-        0:['You jump, I jump. Remember?','Wait to Die,Wait to Live','Make Each day Count'],
-        1:['May the force be with you','Help me, Obi-Wan Kenobi. You are my only hope','I find your lack of faith disturbing.']
+        0:['Nothing','Nothing','Nothing'],
+        1:['You should probably respond to Aunt Petunia','You should probably tell Petunia you are going to do it',
+           'Type: YES'],
+        2:['You should probably ask Aunt Petunia about the text','Ask Aunt Petunia',
+           'Type: @AuntPetunia What is this letter from Hogford about?'],
+        3: ['Feel free to insult Dudley', 'Feel free to attack Dudley with Magic',
+            'You can also threaten Dudley with Magic']
     }
     return hint_set[milestone_marker]
 
-def handle_command(command, channel):
+
+def handle_command(command, channel, milestone_marker):
     """
         Receives commands directed at the bot and determines if they
         are valid commands. If so, then acts on the commands. If not,
@@ -61,7 +64,6 @@ def handle_command(command, channel):
     """
     response = "EXECUSE ME!! You UNGRATEFUL little BRAT! Use proper English " \
                "when talking to me!"
-    global milestone_marker
 
     if command.startswith(AT_BOT):
 
@@ -168,6 +170,7 @@ def handle_command(command, channel):
             dataType=slack_client_petunia.IS_DATA,
             msgFrom = IS_PETUNIA_PORT
         )
+        return milestone_marker
 
 
 def parse_slack_output(slack_rtm_output):
@@ -176,15 +179,20 @@ def parse_slack_output(slack_rtm_output):
         this parsing function returns None unless a message is
         directed at the Bot, based on its ID.
     """
+    ret1 = None
+    ret2 = None
+    ret3 = None
     output_list = slack_rtm_output
     if output_list and len(output_list) > 0:
         for output in output_list:
             if output and 'text' in output and AT_BOT in output['text']:
                 # return text after the @ mention, whitespace removed
                 # return output['text'].split(AT_BOT)[1].strip().lower(),
-                return output['text'], \
-                       output['channel']
-    return None, None
+                ret1 = output['text']
+                ret2 = output['channel']
+            if output and 'MS' in output and output['MS']:
+                ret3 = output['MS']
+    return ret1,ret2,ret3
 
 
 # instantiate Slack & Twilio clients
@@ -192,12 +200,20 @@ slack_client_petunia = procMsgInit(os.environ.get('SLACK_BOT_TOKEN_PETUNIA'),IS_
 
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1 # 1 second delay between reading from firehose
+    ##### Progression tracking #############
+    milestone_marker = 0
+    tmp_marker = None
+    ########################################
     if slack_client_petunia.procMsgConn():
         print("Aunt Petunia Bot connected and running!")
         while True:
-            command, channel = parse_slack_output(slack_client_petunia.procMsgRecv())
+            
+            command, channel, tmp_marker = parse_slack_output(
+                slack_client_petunia.procMsgRecv())
+            if tmp_marker:
+                milestone_marker = int(tmp_marker)
             if command and channel:
-                handle_command(command, channel)
+                milestone_marker = handle_command(command, channel, milestone_marker)
             time.sleep(READ_WEBSOCKET_DELAY)
     else:
         print("Connection failed. Invalid Slack token or bot ID?")

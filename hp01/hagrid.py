@@ -10,6 +10,21 @@ from chapter_02_script import *
 #random
 READ_DELAY = 2
 
+def send_hint():
+    #
+    # Message to @GP:
+    # The strcuture of hint dictionary is
+    # key: milestone, value: 3 hints
+    # Each time users request hint, it will send back the hint to current milestone.
+    #
+    hint_set = {
+        0:['Respond Yes or No','Type: Yes or Type: No'],
+        1:['Respond Yes or No','Type: Yes or Type: No'],
+        2:['Respond Yes to keep going','Type: Yes'],
+        3: ['Ask about Wozniak', 'Type: Who is Professor Wozniak'],
+    }
+    return hint_set[milestone_marker]
+
 
 def handle_command(command, channel, milestone_marker):
     """
@@ -132,7 +147,14 @@ def handle_command(command, channel, milestone_marker):
                 response = "Hhmmmm seems like I didn' quite make that out ther'..."
                 time.sleep(READ_DELAY)
 
-    slack_client_hagrid.procMsgSend(channel=channel,text=response,dataType=slack_client_hagrid.IS_DATA)
+    slack_client_hagrid.procMsgSend(
+        channel=IS_MSG_HANDLER_PORT,
+        text=response,
+        chapter=1,
+        milestone=milestone_marker,
+        dataType=slack_client_hagrid.IS_DATA,
+        msgFrom=IS_HAGRID_PORT
+    )
     return milestone_marker
 
 

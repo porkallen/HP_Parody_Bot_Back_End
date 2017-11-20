@@ -4,7 +4,7 @@ import threading
 import multiprocessing
 from MsgHandler import *
 
-bot_name = ['MsgHandler', 'dudleybot', 'petuniabot', 'hogford']
+bot_name = ['MsgHandler', 'dudleybot', 'petuniabot', 'hogford','hagrid','ollivander']
 #bot_name = ['msgHandler','dudleybot']
 
 def botexec(str):
@@ -30,6 +30,9 @@ if __name__ == "__main__":
     os.environ.setdefault('BOT_ID_DUDLEY', 'U7JL8RLEQ')
     os.environ.setdefault('BOT_ID_BOB_HAIR_CUT', 'U7N6MU4AC')
     os.environ.setdefault('BOT_ID_HOGFORD', 'U7NA7RWC9')
+    os.environ.setdefault('BOT_ID_HAGRID', 'U7UNYBVB3')
+    os.environ.setdefault('BOT_ID_OLLIVANDER', 'U7VFE8PGV')
+    
     for i in bot_name:
         p = multiprocessing.Process(target=botexec,args=(i,))
         jobs.append(p)

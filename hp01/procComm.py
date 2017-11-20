@@ -60,7 +60,7 @@ class procComm:
     port = 0
     server = 0
     IS_DATA = 0
-    IS_CMD = 1
+    IS_HINT = 1
     def __init__(self,token,port):
         if(IS_SLACK == True):
             self.server = SlackClient(token)
@@ -75,21 +75,26 @@ class procComm:
         botmsg = BotMsgNode();
         for AT_BOT in BOT_MSG_HEAD:
             if data.startswith(AT_BOT):
-                sys.stderr.write('[*] msgEx:'+str(BOT_MAP[AT_BOT][0]))
+                sys.stderr.write('[*] msgEx:'+str(BOT_MAP[AT_BOT][0]) + '\n')
                 msg, msgType, port, chapter, milestone, msgFrom = botmsg.parseBotMsg(data)
-                self.procMsgSend(
-                    channel = BOT_MAP[AT_BOT][0],text = msg,
-                    chapter = 0,milestone = 0, 
-                    msgFrom = msgFrom,dataType = msgType
-                )
-                ret = self.procMsgRecv()
-                retStr = botmsg.formatBotMsg(
-                    msg = ret[0]['text'],msgTo = ret[0]['channel'],
-                    msgType = ret[1]['type'],chapter = ret[1]['chapter'],
-                    milestone = ret[2]['MS'],msgFrom = ret[2]['msgFrom']
-                )
-                ret[0]['channel'] = BOT_MAP[AT_BOT][0]
-                return retStr,ret[0]['channel']
+                if int(msgType) == BotMsgNode.BOT_MSG_TYPE_HINT:
+                    self.procHintReqSend(BOT_MAP[AT_BOT][0] - self.HINT_SHIFT)
+                    ret = self.procHintRecv()
+                    return ret, BOT_MAP[AT_BOT][0]
+                else:
+                    self.procMsgSend(
+                        channel=BOT_MAP[AT_BOT][0], text=msg,
+                        chapter=0, milestone=milestone,
+                        msgFrom=msgFrom, dataType=msgType
+                    )
+                    ret = self.procMsgRecv()
+                    retStr = botmsg.formatBotMsg(
+                        msg = ret[0]['text'],msgTo = ret[0]['channel'],
+                        msgType = ret[1]['type'],chapter = ret[1]['chapter'],
+                        milestone = ret[2]['MS'],msgFrom = ret[2]['msgFrom']
+                    )
+                    ret[0]['channel'] = BOT_MAP[AT_BOT][0]
+                    return retStr,ret[0]['channel']
         return '',0
         
     def procMsgConn(self):
@@ -127,11 +132,66 @@ class procComm:
         else:
             msgTx = botmsg.formatBotMsg(
                 text, dataType, channel, chapter, milestone, msgFrom)
-            sys.stderr.write('[*]procMsgSend ' + str(self.server.getsockname()
+            sys.stderr.write('[*] procMsgSend ' + str(self.server.getsockname()
                                                      ) + ' to ' + str(port) + ' msg:' + msgTx + '\n')
             server_address = (self.HOST, port)
             self.server.sendto(bytes(msgTx + '\n'),server_address)
             #print("Sent:     {}".format(data))
+
+    def procHintRecv(self):
+        if(IS_SLACK == True):
+            return None
+        else:   
+            data = self.server.recv(1024).strip()
+            sys.stderr.write('[*] Hint Recv ' + data + '\n')
+            return data
+
+    def procHintSend(self, msgList,channel):
+        if(IS_SLACK == True):
+            return False
+        else:
+            retStr = ''+str(msgList[0])+'!@#'+str(msgList[1])+'!$#'+str(msgList[2])
+            sys.stderr.write('[*]Hint Send ' + retStr + '\n')
+            server_address = (self.HOST, channel)
+            self.hintServer.sendto(bytes(retStr + '\n'), server_address)
+            return True
+
+    def procHintReqRecv(self):
+        if(IS_SLACK == True):
+            return False
+        else:
+            data = self.hintServer.recv(1024).strip()
+            sys.stderr.write('[*]Hint Req Recv ' + data + '\n')
+            if data == 'Hint Request':
+                return True
+        return False
+
+    def procHintReqSend(self,channel):
+        if(IS_SLACK == True):
+            return False
+        else:
+            sys.stderr.write('[*]Hint Req Send \n')
+            msgTx = 'Hint Request'
+            server_address = (self.HOST, channel)
+            self.server.sendto(bytes(msgTx + '\n'), server_address)
+            return True
+
+    def procMSSend(self,ms,channel):
+        if(IS_SLACK == True):
+            return False
+        else:
+            sys.stderr.write('[*] MS Send '+str(ms)+' to '+str(channel))
+            server_address = (self.HOST, channel)
+            self.server.sendto(bytes(ms + '\n'), server_address)
+            return True
+
+    def procMSRecv(self):
+        if(IS_SLACK == True):
+            return None
+        else:
+            data = self.msServer.recv(1024).strip()
+            sys.stderr.write('[*] MS Recv Update: ' + data + '\n')
+            return data
     
 def procMsgInit(token,port):
     sys.stderr.write('Msg init\n')

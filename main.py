@@ -4,7 +4,7 @@ import threading
 import multiprocessing
 from MsgHandler import *
 
-bot_name = ['MsgHandler', 'dudleybot', 'petuniabot', 'bob_hair_cut', 'hogford']
+bot_name = ['MsgHandler', 'dudleybot', 'petuniabot', 'hogford']
 #bot_name = ['msgHandler','dudleybot']
 
 def botexec(str):

@@ -63,7 +63,8 @@ def handle_command(command, channel):
             text = response,
             chapter = 0,
             milestone = 0,
-            dataType=slack_client.IS_DATA
+            dataType=slack_client.IS_DATA,
+            msgFrom = IS_HOGFORD_PORT
         )
 
 

@@ -62,7 +62,7 @@ def handle_command(command, channel):
     response = "EXECUSE ME!! You UNGRATEFUL little BRAT! Use proper English " \
                "when talking to me!"
     global milestone_marker
-    
+
     if command.startswith(AT_BOT):
 
         check = False
@@ -165,7 +165,8 @@ def handle_command(command, channel):
             text = response,
             chapter = 0,
             milestone = milestone_marker,
-            dataType=slack_client_petunia.IS_DATA
+            dataType=slack_client_petunia.IS_DATA,
+            msgFrom = IS_PETUNIA_PORT
         )
 
 

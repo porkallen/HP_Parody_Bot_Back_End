@@ -154,7 +154,7 @@ def handle_command(command, channel):
             chapter = 0,
             milestone = 0,
             dataType=slack_client_dudley.IS_DATA,
-        
+            msgFrom=IS_DUDLEY_PORT
         )
 
 

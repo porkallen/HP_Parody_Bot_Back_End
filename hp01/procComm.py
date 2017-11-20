@@ -24,6 +24,7 @@ class BotMsgNode:
     msgTo = 0
     chapter = 0
     milestone = 0
+    msgFrom = 0
     msg = ''
     BOT_MSG_TYPE_TXT = 0
     BOT_MSG_TYPE_HINT = 1
@@ -32,9 +33,11 @@ class BotMsgNode:
     BOT_MSG_IDX_MSGTO = 2
     BOT_MSG_IDX_CHAP = 3
     BOT_MSG_IDX_MS = 4
+    BOT_MSG_IDX_MSGFROM = 5
     SPLIT_CHAR = '!@#'
-    def formatBotMsg(self,msg,msgType,msgTo,chapter,milestone):
-        strPool = [str(msg),str(msgType),str(msgTo),str(chapter),str(milestone)]
+    def formatBotMsg(self,msg,msgType,msgTo,chapter,milestone,msgFrom):
+        strPool = [str(msg), str(msgType), str(msgTo), str(
+            chapter), str(milestone), str(msgFrom)]
         retStr = ''
         for i in range(len(strPool) - 1):
             retStr += strPool[i]+self.SPLIT_CHAR
@@ -46,7 +49,7 @@ class BotMsgNode:
         # return msgType,Port.milestron,msg
         strPool = []
         strPool = msg.split(self.SPLIT_CHAR);
-        return strPool[self.BOT_MSG_IDX_MSG],strPool[self.BOT_MSG_IDX_MSG_TYPE],strPool[self.BOT_MSG_IDX_MSGTO],strPool[self.BOT_MSG_IDX_CHAP],strPool[self.BOT_MSG_IDX_MS]
+        return strPool[self.BOT_MSG_IDX_MSG],strPool[self.BOT_MSG_IDX_MSG_TYPE],strPool[self.BOT_MSG_IDX_MSGTO],strPool[self.BOT_MSG_IDX_CHAP],strPool[self.BOT_MSG_IDX_MS],strPool[self.BOT_MSG_IDX_MSGFROM]
 
 #s = socket.socket()         # Create a socket object
 #host = socket.gethostname() # Get local machine name
@@ -73,17 +76,17 @@ class procComm:
         for AT_BOT in BOT_MSG_HEAD:
             if data.startswith(AT_BOT):
                 sys.stderr.write('[*] msgEx:'+str(BOT_MAP[AT_BOT][0]))
-                msg, msgType, port, chapter, milestone = botmsg.parseBotMsg(data)
+                msg, msgType, port, chapter, milestone, msgFrom = botmsg.parseBotMsg(data)
                 self.procMsgSend(
                     channel = BOT_MAP[AT_BOT][0],text = msg,
-                    chapter = 0,milestone = 0,
-                    dataType = msgType
+                    chapter = 0,milestone = 0, 
+                    msgFrom = msgFrom,dataType = msgType
                 )
                 ret = self.procMsgRecv()
                 retStr = botmsg.formatBotMsg(
                     msg = ret[0]['text'],msgTo = ret[0]['channel'],
                     msgType = ret[1]['type'],chapter = ret[1]['chapter'],
-                    milestone = ret[1]['MS']
+                    milestone = ret[2]['MS'],msgFrom = ret[2]['msgFrom']
                 )
                 ret[0]['channel'] = BOT_MAP[AT_BOT][0]
                 return retStr,ret[0]['channel']
@@ -109,19 +112,21 @@ class procComm:
             strPool = botmsg.parseBotMsg(data)
             sys.stderr.write('[*] procMsgRecv '+str(self.server.getsockname())+' data: '+data +'\n')
             output_list.append({'text':strPool[botmsg.BOT_MSG_IDX_MSG],'channel':strPool[botmsg.BOT_MSG_IDX_MSGTO]})
-            output_list.append({'type':strPool[botmsg.BOT_MSG_IDX_MSG_TYPE],'chapter':strPool[botmsg.BOT_MSG_IDX_CHAP], 'MS':strPool[botmsg.BOT_MSG_IDX_MS]})
+            output_list.append({'type':strPool[botmsg.BOT_MSG_IDX_MSG_TYPE],'chapter':strPool[botmsg.BOT_MSG_IDX_CHAP]})
+            output_list.append({'MS': strPool[botmsg.BOT_MSG_IDX_MS], 'msgFrom' : strPool[botmsg.BOT_MSG_IDX_MSGFROM]})
             #output_list.append({'type':strPool[botmsg.BOT_MSG_IDX_MSG_TYPE],'chapter':strPool[botmsg.BOT_MSG_IDX_CHAP]})
             #output_list.append({'MS':strPool[botmsg.BOT_MSG_IDX_MS]})
             return output_list
         
-    def procMsgSend(self,channel,text,chapter,milestone,dataType):
+    def procMsgSend(self, channel, text, chapter, milestone, msgFrom, dataType):
         port = channel
         botmsg = BotMsgNode();
         if(IS_SLACK == True):
             if(dataType == botmsg.BOT_MSG_TYPE_TXT):
                 self.server.api_call("chat.postMessage", channel=channel,text=text, as_user=True)
         else:
-            msgTx = botmsg.formatBotMsg(text,dataType,channel,chapter,milestone)
+            msgTx = botmsg.formatBotMsg(
+                text, dataType, channel, chapter, milestone, msgFrom)
             sys.stderr.write('[*]procMsgSend ' + str(self.server.getsockname()
                                                      ) + ' to ' + str(port) + ' msg:' + msgTx + '\n')
             server_address = (self.HOST, port)

@@ -182,6 +182,7 @@ def parse_slack_output(slack_rtm_output):
     ret1 = None
     ret2 = None
     ret3 = None
+    msgFrom = None
     output_list = slack_rtm_output
     if output_list and len(output_list) > 0:
         for output in output_list:
@@ -190,8 +191,12 @@ def parse_slack_output(slack_rtm_output):
                 # return output['text'].split(AT_BOT)[1].strip().lower(),
                 ret1 = output['text']
                 ret2 = output['channel']
+            if output and 'msgFrom' in output and output['msgFrom']:
+                msgFrom = output['msgFrom']
             if output and 'MS' in output and output['MS']:
                 ret3 = output['MS']
+    if int(msgFrom) != IS_MSG_HANDLER_PORT:
+        ret3 = None
     return ret1,ret2,ret3
 
 

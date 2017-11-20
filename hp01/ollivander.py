@@ -54,7 +54,7 @@ def handle_command(command, channel, milestone_marker):
             time.sleep(READ_DELAY)
             check = True
             #HAGRID IS TRIGGERED HERE
-            milestone_marker = 3
+            milestone_marker = 6
 
         ##############################################
         #                  BLOCK 2                   #
@@ -64,7 +64,7 @@ def handle_command(command, channel, milestone_marker):
             response = CH02_ollivander_REPLY_02
             time.sleep(READ_DELAY)
             check = True
-            milestone_marker = 2
+            milestone_marker = 5
 
         ##############################################
         #                  BLOCK 1                   #
@@ -74,7 +74,7 @@ def handle_command(command, channel, milestone_marker):
             response = CH02_ollivander_REPLY_01
             time.sleep(READ_DELAY)
             check = True
-            milestone_marker = 1
+            milestone_marker = 4
 
 
 
@@ -86,7 +86,7 @@ def handle_command(command, channel, milestone_marker):
             response = CH02_ollivander_STATEMENT_01
             time.sleep(READ_DELAY)
             check = True
-            milestone_marker = 0
+            milestone_marker = 3
 
         '''''
         #################################################
@@ -228,7 +228,7 @@ slack_client_ollivander = procMsgInit(os.environ.get('SLACK_BOT_TOKEN_OLLIVANDER
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1 # 1 second delay between reading from firehose
     ##### Progression tracking #############
-    milestone_marker = 0
+    milestone_marker = 3
     tmp_marker = None
     ########################################
     if slack_client_ollivander.procMsgConn():
